@@ -1,0 +1,227 @@
+version: '2'
+services:
+  rabbit:
+    image: rabbitmq:3-management
+    restart: unless-stopped
+    container_name: rabbit
+    ports:
+      - 15672:15672
+      - 5672:5672
+    hostname: rabbit
+    networks:
+      - default    
+
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    container_name: postgres
+    environment:
+        POSTGRES_USER: root
+        POSTGRES_PASSWORD: toortoor!1234
+    ports:
+      - 5432:5432
+    volumes:
+      - ./init/database-anime.sql:/docker-entrypoint-initdb.d/init.sql
+    hostname: postgres
+    networks:
+      - default
+
+  #pgadmin:
+  #  image: dpage/pgadmin4
+  #  restart: unless-stopped
+  #  container_name: pgadmin4
+  #  environment:
+  #    PGADMIN_DEFAULT_EMAIL: root@admin.com
+  #    PGADMIN_DEFAULT_PASSWORD: toortoor!1234
+  #  ports:
+  #    - 5050:80
+  #  hostname: pgadmin4
+  #  networks:
+  #    - default
+
+  ftp:
+    image: danjellz/http-server
+    restart: unless-stopped
+    container_name: httpServer
+    ports:
+      - 5002:8080
+    hostname: http-server
+    volumes:
+     - data:/public
+    networks:
+      - default 
+
+  room-server:
+    image: kju7pwd2/animemanga-roomserver:latest
+    restart: unless-stopped
+    container_name: roomServer
+    ports:
+      - 5001:1234
+    hostname: room-server
+    networks:
+      - default 
+
+  api:
+    image: kju7pwd2/animemanga-apiservice:latest
+    restart: unless-stopped
+    container_name: apiService
+    environment:
+      DATABASE_CONNECTION: User ID=root;Password=toortoor!1234;Host=postgres;Port=5432;Database=animemanga;
+      ADDRESS_RABBIT: rabbit
+      BASE_PATH: "/public"
+      PORT_API: 80
+      LOG_LEVEL: "Info"
+      LIMIT_THREAD_PARALLEL: "50"
+    depends_on:
+      - postgres
+      - rabbit
+    hostname: api
+
+  web:
+    image: kju7pwd2/animemanga-web:latest
+    restart: unless-stopped
+    container_name: web
+    environment:
+      NODE_TLS_REJECT_UNAUTHORIZED: 0
+      API_BASE_URL: "http://api:80"
+      SOCKET_PATH: "ws://<ip server-room>:5001/room"
+      HTTP_PATH: "http://<ip http-server>:5002"
+      BASE_PATH: "/public"
+      SHARE_ROOM: "http://<you-ip>:3000 || DNS"
+    command: bash -c "npm run build && node .output/server/index.mjs"
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
+      - ftp
+      - room-server
+    hostname: web
+    networks:
+      - default
+  
+  updateservice-anime:
+    image: kju7pwd2/animemanga-updateservice:latest
+    restart: unless-stopped
+    container_name: updateService-anime
+    environment:
+      ADDRESS_RABBIT: "rabbit"
+      BASE_PATH: "/public"
+      ADDRESS_API: "api"
+      PORT_API: "80"
+      LOG_LEVEL: "Info"
+      SELECT_SERVICE: "anime"
+    volumes:
+      - data:/public
+    depends_on:
+      - api
+      - rabbit
+
+  updateservice-manga:
+    image: kju7pwd2/animemanga-updateservice:latest
+    restart: unless-stopped
+    container_name: updateService-manga
+    environment:
+      ADDRESS_RABBIT: "rabbit"
+      BASE_PATH: "/public"
+      ADDRESS_API: "api"
+      PORT_API: "80"
+      LOG_LEVEL: "Info"
+      SELECT_SERVICE: "manga"
+    volumes:
+      - data:/public
+    depends_on:
+      - api
+      - rabbit
+
+  upgradeservice-anime:
+      image: kju7pwd2/animemanga-upgradeservice:latest
+      restart: unless-stopped
+      container_name: upgradeService-anime
+      environment:
+        BASE_PATH: "/public"
+        ADDRESS_API: "api"
+        ADDRESS_RABBIT: "rabbit"
+        PORT_API: "80"
+        LOG_LEVEL: "Info"
+        SELECT_SERVICE: "anime"
+      depends_on:
+        - api
+        - rabbit
+
+  upgradeservice-manga:
+      image: kju7pwd2/animemanga-upgradeservice:latest
+      restart: unless-stopped
+      container_name: upgradeService-manga
+      environment:
+        BASE_PATH: "/public"
+        ADDRESS_API: "api"
+        ADDRESS_RABBIT: "rabbit"
+        PORT_API: "80"
+        LOG_LEVEL: "Info"
+        SELECT_SERVICE: "manga"
+      depends_on:
+        - api
+        - rabbit
+
+  downloadservice:
+    image: kju7pwd2/animemanga-downloadservice:latest
+    restart: unless-stopped
+    container_name: downloadService
+    environment:
+      ADDRESS_RABBIT: "rabbit"
+      ADDRESS_API: "api"
+      PORT_API: "80"
+      LOG_LEVEL: "Info"
+      LIMIT_THREAD_PARALLEL: "500"
+      PATH_TEMP: "/temp"
+      BASE_PATH: "/public"
+    volumes:
+      - temp:/temp
+      - data:/public
+    depends_on:
+      - rabbit
+      - api
+    hostname: downloadservice
+
+  notifyservice:
+    image: kju7pwd2/animemanga-notifyservice:latest
+    restart: unless-stopped
+    container_name: notifyService
+    environment:
+      ADDRESS_RABBIT: "rabbit"
+      ADDRESS_API: "api"
+      PORT_API: "80"
+      LOG_LEVEL: "Info"
+      WEBHOOK_DISCORD: "<url>"
+    depends_on:
+      - rabbit
+      - api
+
+  conversionservice:
+    image: kju7pwd2/animemanga-conversionservice:latest
+    restart: unless-stopped
+    container_name: conversionService
+    command: bash -c "apt update && apt install -y ffmpeg"
+    environment:
+      ADDRESS_RABBIT: "rabbit"
+      ADDRESS_API: "api"
+      PORT_API: "80"
+      LOG_LEVEL: "Info"
+      LIMIT_CONSUMER_RABBIT: "1"
+      PATH_FFMPEG: "/usr/bin"
+      PATH_TEMP: "/temp"
+      BASE_PATH: "/public"
+    volumes:
+      - temp:/temp
+      - data:/public
+    depends_on:
+      - rabbit
+      - api
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  data:
+  temp:
