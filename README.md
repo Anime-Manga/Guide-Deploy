@@ -21,14 +21,14 @@ Servizi utilizzati:
 ### Lista di immagini disponibili su DockerHub
 | Nome Immagine | Link |
 | ------ | ------ |
-| 🧮Api Service | [Link](https://hub.docker.com/r/kju7pwd2/animeplex-api) |
-| 📩Download Service | [Link](https://hub.docker.com/r/kju7pwd2/animeplex-downloadservice) |
-| 📨Notify Service | [Link](https://hub.docker.com/r/kju7pwd2/animeplex-notifyservice) |
-| 💾Update Service | [Link](https://hub.docker.com/r/kju7pwd2/animeplex-updateservice) |
-| 💽Upgrade Service | [Link](https://hub.docker.com/r/kju7pwd2/animeplex-upgradeservice) |
-| 💱Conversion Service | [Link](https://hub.docker.com/r/kju7pwd2/animeplex-conversionservice) |
-| 🏠Room server (Hapi) | [Link](https://hub.docker.com/r/kju7pwd2/animeplex-roomserver) |
-| 🌐Web Client | [Link](https://hub.docker.com/r/kju7pwd2/animeplex-web) |
+| 🧮Api Service | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-apiservice) |
+| 📩Download Service | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-downloadservice) |
+| 📨Notify Service | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-notifyservice) |
+| 💾Update Service | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-updateservice) |
+| 💽Upgrade Service | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-upgradeservice) |
+| 💱Conversion Service | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-conversionservice) |
+| 🏠Room server (Hapi) | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-roomserver) |
+| 🌐Web Client | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-web) |
 
 ## 🌐Web Server
 Questo progetto verrà utilizzato per gli utenti che vorranno visualizzare e scaricare gli episodi.
