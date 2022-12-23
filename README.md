@@ -1,4 +1,4 @@
-# Anime Plex 🎬
+# Anime Manga 🎬
 Scarica le serie tv/film dal sito [AnimeSaturn](https://www.animesaturn.in/) e/o manga dal sito [MangaWorld](https://www.mangaworld.so/).
 Grazie al Web integrato in questo progetto è possibile scaricare e vedere da solo oppure con gli amici l'anime oppure manga.
 
