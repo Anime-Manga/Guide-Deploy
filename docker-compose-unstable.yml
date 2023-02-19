@@ -21,8 +21,19 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./init/database.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./schemaDefault/schemas.json:/app/schemas.json
+      - ./init/database-dev.sql:/docker-entrypoint-initdb.d/init.sql
     hostname: postgres
+    networks:
+      - default
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    container_name: mongo
+    ports:
+      - 27017:27017
+    hostname: mongo
     networks:
       - default
 
@@ -72,6 +83,10 @@ services:
       PORT_API: 80
       LOG_LEVEL: "Info"
       LIMIT_THREAD_PARALLEL: "50"
+      DATABASE_CONNECTION_MONGO: "mongodb://mongo:27017",
+      NAME_DATABASE_MONGO: "animeManga"
+    volumes:
+      - ./schemaDefault/schemas.json:/app/schemas.json
     depends_on:
       - postgres
       - rabbit
@@ -111,6 +126,7 @@ services:
       LOG_LEVEL: "Info"
       SELECT_SERVICE: "anime"
     volumes:
+      - ./schemaDefault/schemas.json:/app/schemas.json
       - data:/public
     depends_on:
       - api
@@ -128,6 +144,7 @@ services:
       LOG_LEVEL: "Info"
       SELECT_SERVICE: "manga"
     volumes:
+      - ./schemaDefault/schemas.json:/app/schemas.json
       - data:/public
     depends_on:
       - api
@@ -176,6 +193,7 @@ services:
       PATH_TEMP: "/temp"
       BASE_PATH: "/public"
     volumes:
+      - ./schemaDefault/schemas.json:/app/schemas.json
       - temp:/temp
       - data:/public
     depends_on:
