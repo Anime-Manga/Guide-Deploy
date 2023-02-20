@@ -18,7 +18,8 @@ CREATE TABLE episode
     resolution varchar(250),
     playlistSources varchar(250),
     startNumberFrame int,
-    endNumberFrame int
+    endNumberFrame int,
+    nameCfg text not null
 );
 
 CREATE TABLE episodeRegister
@@ -39,7 +40,6 @@ CREATE TABLE chapter
     urlPage text not null,
     stateDownload varchar(100),
     percentualDownload int default 0,
-
     nameCfg text not null
 );
 

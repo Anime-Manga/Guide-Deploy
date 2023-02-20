@@ -55,6 +55,7 @@
             },
             "episodeTotal":{
                 "type":["number"],
+                "parse":"number",
                 "path": ["//div/div/div[@class='container shadow rounded bg-dark-as-box mb-3 p-3 w-100 text-white']"],
                 "child_nodes": 20
             },
@@ -83,7 +84,7 @@
             "collection":{
                 "type": ["array"],
                 "path":["//div/div/div/div/div[@class='tab-content']/div/div/a"],
-                "thread": false,
+                "thread": true,
                 "attributes": "href"
             },
             "procedure":{
@@ -155,10 +156,12 @@
             },
             "totalVolumes":{
                 "type":["number"],
+                "parse":"number",
                 "path": ["//div[@class='info']/div[@class='meta-data row px-1']/div[9]/span[2]"]
             },
             "totalChapters":{
                 "type":["number"],
+                "parse":"number",
                 "path": ["//div[@class='info']/div[@class='meta-data row px-1']/div[10]/span[2]"]
             },
             "type":{
@@ -179,10 +182,10 @@
         "book":{
             "collection":{
                 "type": ["array"],
-                "path":["//div[@class='chapter']/a"],
+                "path":["//div[@class='volume-chapters pl-2']/div[@class='chapter']/a", "//div[@class='chapters-wrapper py-2 pl-0']/div[@class='chapter pl-2']/a"],
                 "attributes": "href",
                 "reverseCount": false,
-                "thread": false
+                "thread": true
             },
             "procedure":{
                 "0":{
@@ -200,19 +203,19 @@
                         "path": ["//select[@class='volume custom-select']/option[@selected]"],
                         "removeWords": ["volume"]
                     },
-                    "removeWordsVolume": ["volume"],
                     "numberMaxImage": {
                         "type": ["array"],
                         "path": ["//select[@class='page custom-select']/option"],
                         "attributes": "value",
-                        "startZero": true
+                        "startZero": false
                     }
                 }
             },
             "download":{
                 "type": ["link"],
-                "path":["//div[@id='page']/img[@id=page-{numberPage}]"],
-                "attributes": "src"
+                "path":["//div[@id='page']/img[@id='page-{numberPage}']"],
+                "attributes": "src",
+                "startZero": false
             }
         }
     }
