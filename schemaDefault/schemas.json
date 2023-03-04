@@ -5,7 +5,7 @@
         "search":{
             "url_search": "https://www.animesaturn.in/animelist?",
             "page": false,
-            "prefixSearch": "keyword",
+            "prefixSearch": "search",
 
             "collection":{
                 "type": ["array"],
