@@ -49,3 +49,39 @@ CREATE TABLE chapterRegister
     chapterPath varchar[],
     chapterHash varchar[]
 );
+
+/* account */
+
+CREATE TABLE account
+(
+    username varchar(250) primary key not null,
+    password varchar(500) not null
+);
+
+CREATE TABLE whitelistEpisode
+(
+    name varchar(500) primary key not null,
+    username varchar(250) REFERENCES account(username) ON DELETE CASCADE not null
+);
+
+CREATE TABLE whitelistChapter
+(
+    name varchar(500) primary key not null,
+    username varchar(250) REFERENCES account(username) ON DELETE CASCADE not null
+);
+
+CREATE TABLE progressEpisode(
+    id serial primary key,
+    username varchar(250) REFERENCES account(username) ON DELETE CASCADE not null,
+    name varchar(500) not null,
+    hours int default 0,
+    minutes int default 0,
+    seconds int default 0
+);
+
+CREATE TABLE progressChapter(
+    id serial primary key,
+    username varchar(250) REFERENCES account(username) ON DELETE CASCADE not null,
+    name varchar(500) not null,
+    page int default 1
+);
