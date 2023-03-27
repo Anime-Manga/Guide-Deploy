@@ -58,16 +58,11 @@ CREATE TABLE account
     password varchar(500) not null
 );
 
-CREATE TABLE whitelistEpisode
+CREATE TABLE whitelist
 (
     name varchar(500) primary key not null,
-    username varchar(250) REFERENCES account(username) ON DELETE CASCADE not null
-);
-
-CREATE TABLE whitelistChapter
-(
-    name varchar(500) primary key not null,
-    username varchar(250) REFERENCES account(username) ON DELETE CASCADE not null
+    username varchar(250) REFERENCES account(username) ON DELETE CASCADE not null,
+    nameCfg text not null
 );
 
 CREATE TABLE progressEpisode(
