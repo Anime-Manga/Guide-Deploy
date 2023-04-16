@@ -102,7 +102,9 @@ services:
       SOCKET_PATH: "ws://<ip server-room>:5001/room"
       HTTP_PATH: "http://<ip http-server>:5002"
       BASE_PATH: "/public"
-      SHARE_ROOM: "http://<you-ip>:3000 || DNS"
+      SHARE_ROOM: "http://<your-ip>:3000 || DNS"
+      ORIGIN: "http://<your-ip>:3000"
+      NUXT_SECRET: "yoursecret"
     command: bash -c "npm run build && node .output/server/index.mjs"
     ports:
       - 3000:3000
@@ -161,6 +163,8 @@ services:
         PORT_API: "80"
         LOG_LEVEL: "Info"
         SELECT_SERVICE: "anime"
+      volumes:
+        - ./schemaDefault/schemas.json:/app/schemas.json
       depends_on:
         - api
         - rabbit
@@ -176,6 +180,8 @@ services:
         PORT_API: "80"
         LOG_LEVEL: "Info"
         SELECT_SERVICE: "manga"
+      volumes:
+        - ./schemaDefault/schemas.json:/app/schemas.json
       depends_on:
         - api
         - rabbit
