@@ -69,6 +69,8 @@ CREATE TABLE progressEpisode(
     id serial primary key,
     username varchar(250) REFERENCES account(username) ON DELETE CASCADE not null,
     name varchar(500) not null,
+    nameCfg text not null,
+    nameEpisode varchar(500) not null,
     hours int default 0,
     minutes int default 0,
     seconds int default 0
@@ -78,5 +80,7 @@ CREATE TABLE progressChapter(
     id serial primary key,
     username varchar(250) REFERENCES account(username) ON DELETE CASCADE not null,
     name varchar(500) not null,
+    nameCfg text not null,
+    nameChapter varchar(500) not null,
     page int default 1
 );
