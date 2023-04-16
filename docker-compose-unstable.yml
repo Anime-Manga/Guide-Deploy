@@ -63,7 +63,7 @@ services:
       - default 
 
   room-server:
-    image: kju7pwd2/animemanga-roomserver:DEV_latest
+    image: kju7pwd2/animemanga-roomserver:latest_DEV
     restart: unless-stopped
     container_name: roomServer
     ports:
@@ -73,7 +73,7 @@ services:
       - default 
 
   api:
-    image: kju7pwd2/animemanga-apiservice:DEV_latest
+    image: kju7pwd2/animemanga-apiservice:latest_DEV
     restart: unless-stopped
     container_name: apiService
     environment:
@@ -83,7 +83,7 @@ services:
       PORT_API: 80
       LOG_LEVEL: "Info"
       LIMIT_THREAD_PARALLEL: "50"
-      DATABASE_CONNECTION_MONGO: "mongodb://mongo:27017",
+      DATABASE_CONNECTION_MONGO: "mongodb://mongo:27017"
       NAME_DATABASE_MONGO: "animeManga"
     volumes:
       - ./schemaDefault/schemas.json:/app/schemas.json
@@ -93,7 +93,7 @@ services:
     hostname: api
 
   web:
-    image: kju7pwd2/animemanga-web:DEV_latest
+    image: kju7pwd2/animemanga-web:latest_DEV
     restart: unless-stopped
     container_name: web
     environment:
@@ -115,7 +115,7 @@ services:
       - default
   
   updateservice-anime:
-    image: kju7pwd2/animemanga-updateservice:DEV_latest
+    image: kju7pwd2/animemanga-updateservice:latest_DEV
     restart: unless-stopped
     container_name: updateService-anime
     environment:
@@ -133,7 +133,7 @@ services:
       - rabbit
 
   updateservice-manga:
-    image: kju7pwd2/animemanga-updateservice:DEV_latest
+    image: kju7pwd2/animemanga-updateservice:latest_DEV
     restart: unless-stopped
     container_name: updateService-manga
     environment:
@@ -151,7 +151,7 @@ services:
       - rabbit
 
   upgradeservice-anime:
-      image: kju7pwd2/animemanga-upgradeservice:DEV_latest
+      image: kju7pwd2/animemanga-upgradeservice:latest_DEV
       restart: unless-stopped
       container_name: upgradeService-anime
       environment:
@@ -166,7 +166,7 @@ services:
         - rabbit
 
   upgradeservice-manga:
-      image: kju7pwd2/animemanga-upgradeservice:DEV_latest
+      image: kju7pwd2/animemanga-upgradeservice:latest_DEV
       restart: unless-stopped
       container_name: upgradeService-manga
       environment:
@@ -181,7 +181,7 @@ services:
         - rabbit
 
   downloadservice:
-    image: kju7pwd2/animemanga-downloadservice:DEV_latest
+    image: kju7pwd2/animemanga-downloadservice:latest_DEV
     restart: unless-stopped
     container_name: downloadService
     environment:
@@ -202,7 +202,7 @@ services:
     hostname: downloadservice
 
   notifyservice:
-    image: kju7pwd2/animemanga-notifyservice:DEV_latest
+    image: kju7pwd2/animemanga-notifyservice:latest_DEV
     restart: unless-stopped
     container_name: notifyService
     environment:
@@ -216,7 +216,7 @@ services:
       - api
 
   conversionservice:
-    image: kju7pwd2/animemanga-conversionservice:DEV_latest
+    image: kju7pwd2/animemanga-conversionservice:latest_DEV
     restart: unless-stopped
     container_name: conversionService
     command: bash -c "apt update && apt install -y ffmpeg"
