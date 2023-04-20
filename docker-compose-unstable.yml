@@ -23,6 +23,7 @@ services:
     volumes:
       - ./schemaDefault/schemas.json:/app/schemas.json
       - ./init/database-dev.sql:/docker-entrypoint-initdb.d/init.sql
+      - dataPostgres:/var/lib/postgresql/data
     hostname: postgres
     networks:
       - default
@@ -34,6 +35,8 @@ services:
     ports:
       - 27017:27017
     hostname: mongo
+    volumes:
+      - dataMongo:/data/db
     networks:
       - default
 
@@ -126,7 +129,7 @@ services:
       ADDRESS_API: "api"
       PORT_API: "80"
       LOG_LEVEL: "Info"
-      SELECT_SERVICE: "anime"
+      SELECT_SERVICE: "video"
     volumes:
       - ./schemaDefault/schemas.json:/app/schemas.json
       - data:/public
@@ -144,7 +147,7 @@ services:
       ADDRESS_API: "api"
       PORT_API: "80"
       LOG_LEVEL: "Info"
-      SELECT_SERVICE: "manga"
+      SELECT_SERVICE: "book"
     volumes:
       - ./schemaDefault/schemas.json:/app/schemas.json
       - data:/public
@@ -162,7 +165,7 @@ services:
         ADDRESS_RABBIT: "rabbit"
         PORT_API: "80"
         LOG_LEVEL: "Info"
-        SELECT_SERVICE: "anime"
+        SELECT_SERVICE: "video"
       volumes:
         - ./schemaDefault/schemas.json:/app/schemas.json
       depends_on:
@@ -179,7 +182,7 @@ services:
         ADDRESS_RABBIT: "rabbit"
         PORT_API: "80"
         LOG_LEVEL: "Info"
-        SELECT_SERVICE: "manga"
+        SELECT_SERVICE: "book"
       volumes:
         - ./schemaDefault/schemas.json:/app/schemas.json
       depends_on:
@@ -248,4 +251,26 @@ networks:
 
 volumes:
   data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/data'
   temp:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/temp'
+  dataPostgres:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/dataPostgres'
+  dataMongo:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/dataMongo'
