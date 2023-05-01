@@ -255,22 +255,22 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/data'
+      device: '/animeMnaga/data'
   temp:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/temp'
+      device: '/animeMnaga/temp'
   dataPostgres:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/dataPostgres'
+      device: '/animeMnaga/dataPostgres'
   dataMongo:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/dataMongo'
+      device: '/animeMnaga/dataMongo'

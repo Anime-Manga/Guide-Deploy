@@ -218,5 +218,122 @@
                 "startZero": false
             }
         }
+    },
+    "cfg_3":{
+        "name": "mangaworldadult",
+        "type": "book",
+        "search":{
+            "url_search": "https://www.mangaworldadult.com/archive?",
+            "page": true,
+            "prefixPage": "page",
+            "prefixSearch": "keyword",
+
+            "collection":{
+                "type": ["array"],
+                "path":["//div[@class='comics-grid']/div"]
+            },
+
+            "description":{
+                "imageUrl": {
+                    "type": ["image"],
+                    "path":["//a/img"],
+                    "attributes": "src"
+                },
+                "urlPage": {
+                    "type": ["link"],
+                    "path":["//a"],
+                    "attributes": "href"
+                },
+                "name": {
+                    "type": ["string"],
+                    "path":["//div/p"]
+                }
+            }
+        },
+        "description": {
+            "name_id":{
+                "type":["string"],
+                "path": ["//div[@class='info']/h1"]
+            },
+            "artist":{
+                "type":["string"],
+                "path": ["//div[@class='info']/div[@class='meta-data row px-1']/div[3]/a"]
+            },
+            "author":{
+                "type":["string"],
+                "path": ["//div[@class='info']/div[@class='meta-data row px-1']/div[4]/a"]
+            },
+            "status":{
+                "type":["string"],
+                "path": ["//div[@class='info']/div[@class='meta-data row px-1']/div[6]/a"]
+            },
+            "dateRelase":{
+                "type":["string"],
+                "path": ["//div[@class='info']/div[@class='meta-data row px-1']/div[8]/a"]
+            },
+            "totalVolumes":{
+                "type":["number"],
+                "parse":"number",
+                "path": ["//div[@class='info']/div[@class='meta-data row px-1']/div[9]/span[2]"]
+            },
+            "totalChapters":{
+                "type":["number"],
+                "parse":"number",
+                "path": ["//div[@class='info']/div[@class='meta-data row px-1']/div[10]/span[2]"]
+            },
+            "type":{
+                "type":["string"],
+                "path": ["//div[@class='info']/div[@class='meta-data row px-1']/div[5]/a"]
+            },
+            "description":{
+                "type":["string"],
+                "path": ["//div[@class='has-shadow comic-description px-3 mt-4']/div[@id='noidungm']"]
+            },
+            "cover":{
+                "type": ["image"],
+                "path": ["//div[@class='thumb mb-3 text-center']/img"],
+                "attributes": "src",
+                "download": false
+            }
+        },
+        "book":{
+            "collection":{
+                "type": ["array"],
+                "path":["//div[@class='volume-chapters pl-2']/div[@class='chapter']/a", "//div[@class='chapters-wrapper py-2 pl-0']/div[@class='chapter pl-2']/a"],
+                "attributes": "href",
+                "reverseCount": false,
+                "thread": true
+            },
+            "procedure":{
+                "0":{
+                    "type": ["book/link"],
+                    "path":["//meta[@property='og:url']"],
+                    "attributes": "content",
+                    "addUrl": "?style=list",
+                    "getChapter": {
+                        "type": ["number"],
+                        "path": ["//select[@class='chapter custom-select']/option[@selected]"],
+                        "removeWords": ["capitolo"]
+                    },
+                    "getVolume": {
+                        "type": ["number"],
+                        "path": ["//select[@class='volume custom-select']/option[@selected]"],
+                        "removeWords": ["volume"]
+                    },
+                    "numberMaxImage": {
+                        "type": ["array"],
+                        "path": ["//select[@class='page custom-select']/option"],
+                        "attributes": "value",
+                        "startZero": false
+                    }
+                }
+            },
+            "download":{
+                "type": ["link"],
+                "path":["//div[@id='page']/img[@id='page-{numberPage}']"],
+                "attributes": "src",
+                "startZero": false
+            }
+        }
     }
 }

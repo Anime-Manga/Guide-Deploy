@@ -21,8 +21,22 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./init/database.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./schemaDefault/schemas.json:/app/schemas.json
+      - ./init/database-dev.sql:/docker-entrypoint-initdb.d/init.sql
+      - dataPostgres:/var/lib/postgresql/data
     hostname: postgres
+    networks:
+      - default
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    container_name: mongo
+    ports:
+      - 27017:27017
+    hostname: mongo
+    volumes:
+      - dataMongo:/data/db
     networks:
       - default
 
@@ -72,6 +86,10 @@ services:
       PORT_API: 80
       LOG_LEVEL: "Info"
       LIMIT_THREAD_PARALLEL: "50"
+      DATABASE_CONNECTION_MONGO: "mongodb://mongo:27017"
+      NAME_DATABASE_MONGO: "animeManga"
+    volumes:
+      - ./schemaDefault/schemas.json:/app/schemas.json
     depends_on:
       - postgres
       - rabbit
@@ -87,7 +105,9 @@ services:
       SOCKET_PATH: "ws://<ip server-room>:5001/room"
       HTTP_PATH: "http://<ip http-server>:5002"
       BASE_PATH: "/public"
-      SHARE_ROOM: "http://<you-ip>:3000 || DNS"
+      SHARE_ROOM: "http://<your-ip>:3000 || DNS"
+      ORIGIN: "http://<your-ip>:3000"
+      NUXT_SECRET: "yoursecret"
     command: bash -c "npm run build && node .output/server/index.mjs"
     ports:
       - 3000:3000
@@ -109,8 +129,9 @@ services:
       ADDRESS_API: "api"
       PORT_API: "80"
       LOG_LEVEL: "Info"
-      SELECT_SERVICE: "anime"
+      SELECT_SERVICE: "video"
     volumes:
+      - ./schemaDefault/schemas.json:/app/schemas.json
       - data:/public
     depends_on:
       - api
@@ -126,8 +147,9 @@ services:
       ADDRESS_API: "api"
       PORT_API: "80"
       LOG_LEVEL: "Info"
-      SELECT_SERVICE: "manga"
+      SELECT_SERVICE: "book"
     volumes:
+      - ./schemaDefault/schemas.json:/app/schemas.json
       - data:/public
     depends_on:
       - api
@@ -143,7 +165,9 @@ services:
         ADDRESS_RABBIT: "rabbit"
         PORT_API: "80"
         LOG_LEVEL: "Info"
-        SELECT_SERVICE: "anime"
+        SELECT_SERVICE: "video"
+      volumes:
+        - ./schemaDefault/schemas.json:/app/schemas.json
       depends_on:
         - api
         - rabbit
@@ -158,7 +182,9 @@ services:
         ADDRESS_RABBIT: "rabbit"
         PORT_API: "80"
         LOG_LEVEL: "Info"
-        SELECT_SERVICE: "manga"
+        SELECT_SERVICE: "book"
+      volumes:
+        - ./schemaDefault/schemas.json:/app/schemas.json
       depends_on:
         - api
         - rabbit
@@ -176,6 +202,7 @@ services:
       PATH_TEMP: "/temp"
       BASE_PATH: "/public"
     volumes:
+      - ./schemaDefault/schemas.json:/app/schemas.json
       - temp:/temp
       - data:/public
     depends_on:
@@ -224,4 +251,26 @@ networks:
 
 volumes:
   data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/animeMnaga/data'
   temp:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/animeMnaga/temp'
+  dataPostgres:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/animeMnaga/dataPostgres'
+  dataMongo:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/animeMnaga/dataMongo'

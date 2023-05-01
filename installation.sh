@@ -1,5 +1,9 @@
 #!/bin/bash
-sudo mkdir /data /temp /dataPostgres /dataMongo
+echo "--------------------------"
+echo "| Welcome to Anime&Manga |"
+echo "--------------------------"
+
+sudo mkdir /animeMnaga/data /animeMnaga/temp /animeMnaga/dataPostgres /animeMnaga/dataMongo
 
 if [[ $1 == "dev" ]]
 then

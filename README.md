@@ -31,7 +31,8 @@ Servizi utilizzati:
 | 🌐Web Client | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-web) |
 
 ## 🌐Web Server
-Questo progetto verrà utilizzato per gli utenti che vorranno visualizzare e scaricare gli episodi.
+Questo progetto verrà utilizzato per gli utenti che vorranno scaricare anime e/o manga.
+Hanno la possibilità di vedere l'anime con gli amici in tempo reale.
 
 ### Expose Ports:
 - 3000 tcp
@@ -54,10 +55,14 @@ example:
     
     #--- Share link ---
     SHARE_ROOM: "http://localhost:33333" #http://localhost:3000 [default]
+
+    #--- AUTH ---
+    ORIGIN: "http://<your-ip>:3000" #http://localhost:3000
+    NUXT_SECRET: "secret" #animemanga [default]
 ```
 
 ## 🧮Api Service
-Questo progetto verrà utilizzato per esporre i dati in maniera facile e veloce con il database postgresql.
+Questo progetto verrà utilizzato per esporre i dati in maniera facile e veloce con il database postgresql e mongo.
 
 ### Expose Ports:
 - 80 tcp
@@ -69,6 +74,8 @@ Questo progetto verrà utilizzato per esporre i dati in maniera facile e veloce 
 example:
     #--- DB ---
     DATABASE_CONNECTION: User ID=guest;Password=guest;Host=localhost;Port=33333;Database=db; [require]
+    DATABASE_CONNECTION_MONGO: "mongodb://ip:port"
+    NAME_DATABASE_MONGO: "name db"
     
     #--- Rabbit ---
     USERNAME_RABBIT: "guest" #guest [default]
@@ -112,7 +119,7 @@ example:
     BASE_PATH: "/folder/anime" or "D:\\\\Directory\Anime" #/ [default]
     TIME_REFRESH: "60000" <-- milliseconds #120000 [default] 2 minutes
     LIMIT_THREAD_PARALLEL: "8" #5 [default]
-    SELECT_SERVICE: "manga or anime" #anime
+    SELECT_SERVICE: "book or video" #video
 ```
 
 ## 💽Upgrade Service
@@ -140,13 +147,14 @@ example:
     BASE_PATH: "/folder/anime" or "D:\\\\Directory\Anime" #http [default]
     TIME_REFRESH: "60000" <-- milliseconds #1200000 [default] 20 minutes
     LIMIT_THREAD_PARALLEL: "8" #5 [default]
-    SELECT_SERVICE: "manga or anime" #anime
+    SELECT_SERVICE: "book or video" #video
 ```
 
 ## 📩Download Service
 Questo progetto verrà utilizzato per scaricare i video e mettere nella cartella.
 ### Information general:
 - `require` volume mounted on Docker
+- Se hai abilitato il proxy, nella cartella proxy dovete inserire gli indirizzi ip con il comma, come in questo esempio: `http:1111:1234,http:2222:1234`
 ### Variabili globali richiesti:
 ```sh
 example:
@@ -165,8 +173,13 @@ example:
     LOG_LEVEL: "Debug|Info|Error" #Info [default]
     WEBHOOK_DISCORD_DEBUG: "url" [not require]
     
+    #--- proxy ---
+    PROXY_ENABLE: "true"
+
     #--- General ---
-    LIMIT_THREAD_PARALLEL: "500" #5 [default]
+    DELAY_RETRY_ERROR: "60000" #10000 [default]
+    MAX_DELAY: "40" #5 [default]
+    LIMIT_THREAD_PARALLEL: "100" #5 [default]
     PATH_TEMP: "/tmp/folder" #D:\\TestAnime\\temp [default]
     BASE_PATH: "/folder/anime" or "D:\\\\Directory\Anime" #/ [default]
 ```
@@ -217,6 +230,7 @@ example:
     WEBHOOK_DISCORD_DEBUG: "url" [not require]
     
     #--- General ---
+    MAX_THREAD: "3" #3 default
     PATH_TEMP: "/folder/temp" [require]
     PATH_FFMPEG: "/folder/bin" #/usr/local/bin/ffmpeg [default]
     BASE_PATH: "/folder/anime" or "D:\\\\Directory\Anime" #/ [default]
