@@ -91,6 +91,7 @@ services:
     volumes:
       - ./schemaDefault/schemas.json:/app/schemas.json
     depends_on:
+      - mongo
       - postgres
       - rabbit
     hostname: api
@@ -100,15 +101,13 @@ services:
     restart: unless-stopped
     container_name: web
     environment:
-      NODE_TLS_REJECT_UNAUTHORIZED: 0
-      API_BASE_URL: "http://api:80"
-      SOCKET_PATH: "ws://<ip server-room>:5001/room"
-      HTTP_PATH: "http://<ip http-server>:5002"
-      BASE_PATH: "/public"
-      SHARE_ROOM: "http://<your-ip>:3000 || DNS"
+      NUXT_API_BASE: "http://api:80"
+      NUXT_PUBLIC_SOCKET_BASE: "ws://<ip server-room>:5001/room"
+      NUXT_PUBLIC_HTTP_BASE: "http://<ip http-server>:5002"
+      NUXT_PUBLIC_BASE_PATH: "/public"
+      NUXT_PUBLIC_WEB_BASE: "http://<your-ip>:3000 || DNS"
       ORIGIN: "http://<your-ip>:3000"
       NUXT_SECRET: "yoursecret"
-    command: bash -c "npm run build && node .output/server/index.mjs"
     ports:
       - 3000:3000
     depends_on:

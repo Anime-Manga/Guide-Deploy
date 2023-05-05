@@ -41,20 +41,17 @@ Hanno la possibilità di vedere l'anime con gli amici in tempo reale.
 ```sh
 example:
     #--- API ---
-    API_BASE_URL: 'http://localhost:3333' #http://localhost:5000 [default]
-
-    #--- General ---
-    NODE_TLS_REJECT_UNAUTHORIZED: 0
+    NUXT_API_BASE: 'http://localhost:3333' #http://localhost:5000 [default]
 
     #--- Path ---
-    HTTP_PATH: 'http://localhost:3333' #http://localhost:5002 [default]
-    BASE_PATH: "/path" #"/public" [default]
+    NUXT_PUBLIC_HTTP_BASE: 'http://localhost:3333' #http://localhost:5002 [default]
+    NUXT_PUBLIC_BASE_PATH: "/path" #"/public" [default]
 
     #--- WebSocket ---
-    SOCKET_PATH: "ws://localhost:1111/path" #ws://localhost:5001/room [default]
+    NUXT_PUBLIC_SOCKET_BASE: "ws://localhost:1111/path" #ws://localhost:5001/room [default]
     
     #--- Share link ---
-    SHARE_ROOM: "http://localhost:33333" #http://localhost:3000 [default]
+    NUXT_PUBLIC_WEB_BASE: "http://localhost:33333" #http://localhost:3000 [default]
 
     #--- AUTH ---
     ORIGIN: "http://<your-ip>:3000" #http://localhost:3000
