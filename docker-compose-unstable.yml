@@ -106,7 +106,7 @@ services:
       NUXT_PUBLIC_HTTP_BASE: "http://<ip http-server>:5002"
       NUXT_PUBLIC_BASE_PATH: "/public"
       NUXT_PUBLIC_WEB_BASE: "http://<your-ip>:3000 || DNS"
-      ORIGIN: "http://<your-ip>:3000"
+      NUXT_PUBLIC_AUTH_ORIGIN: "http://<your-ip>:3000"
       NUXT_SECRET: "yoursecret"
     ports:
       - 3000:3000

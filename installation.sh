@@ -3,7 +3,7 @@ echo "--------------------------"
 echo "| Welcome to Anime&Manga |"
 echo "--------------------------"
 
-sudo mkdir /animeMnaga/data /animeMnaga/temp /animeMnaga/dataPostgres /animeMnaga/dataMongo
+sudo mkdir /animeManga mkdir /animeManga/data /animeManga/temp /animeManga/dataPostgres /animeManga/dataMongo
 
 if [[ $1 == "dev" ]]
 then
