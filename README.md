@@ -12,13 +12,14 @@ Il progetto si suddivide in 9 progetti:
 - 💱Conversion Service (C#)
 - 🏠Room server (Hapi)
 - 📁Path server (Nodejs)
-- 🌐Web Server([Nuxtjs](https://nuxtjs.org/))
+- 🌐Web Server([Nuxtjs](https://nuxt.com/) V3)
 
 Servizi utilizzati:
 - 🐰[RabbitMQ](https://www.rabbitmq.com/)
 - 🗄[Postgresql](https://www.postgresql.org/)
+- 📄[MongoDB](https://www.mongodb.com/)
 
-### Lista di immagini disponibili su DockerHub
+### Le immagini sono disponibili su DockerHub
 | Nome Immagine | Link |
 | ------ | ------ |
 | 🧮Api Service | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-apiservice) |
@@ -30,45 +31,71 @@ Servizi utilizzati:
 | 🏠Room server (Hapi) | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-roomserver) |
 | 🌐Web Client | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-web) |
 
-## 🌐Web Server
-Questo progetto verrà utilizzato per gli utenti che vorranno visualizzare e scaricare gli episodi.
+#### Istruzioni per avviare i servizi
+1. Completare alcuni campi vuoti nel file docker-compose.yml
+2. Avviare il bash della installazione `bash installation.sh` oppure `./installation.sh` e Goditi!😊😁🥴
 
-### Expose Ports:
-- 3000 tcp
+## 🌐Web Server
+Questo progetto verrà utilizzato per gli utenti che vorranno scaricare anime e/o manga.
+Hanno la possibilità di vedere l'anime con gli amici in tempo reale.
+
+| Expose ports | Protocol |
+| ------ | ------ |
+| 3000 | TCP |
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| Api | ✅  |
+| Ftp | ✅  |
+| Room server | ⛔ |
 
 ### Variabili globali richiesti:
 ```sh
 example:
     #--- API ---
-    API_BASE_URL: 'http://localhost:3333' #http://localhost:5000 [default]
-
-    #--- General ---
-    NODE_TLS_REJECT_UNAUTHORIZED: 0
+    NUXT_API_BASE: 'http://localhost:3333' #http://localhost:5000 [default]
 
     #--- Path ---
-    HTTP_PATH: 'http://localhost:3333' #http://localhost:5002 [default]
-    BASE_PATH: "/path" #"/public" [default]
+    NUXT_PUBLIC_HTTP_BASE: 'http://localhost:3333' #http://localhost:5002 [default]
+    NUXT_PUBLIC_BASE_PATH: "/path" #"/public" [default]
 
     #--- WebSocket ---
-    SOCKET_PATH: "ws://localhost:1111/path" #ws://localhost:5001/room [default]
+    NUXT_PUBLIC_SOCKET_BASE: "ws://localhost:1111/path" #ws://localhost:5001/room [default]
     
     #--- Share link ---
-    SHARE_ROOM: "http://localhost:33333" #http://localhost:3000 [default]
+    NUXT_PUBLIC_WEB_BASE: "http://localhost:33333" #http://localhost:3000 [default]
+
+    #--- AUTH ---
+    NUXT_PUBLIC_AUTH_ORIGIN: "http://<your-ip>:3000" #http://localhost:3000
+    NUXT_SECRET: "secret" #animemanga [default]
 ```
 
 ## 🧮Api Service
-Questo progetto verrà utilizzato per esporre i dati in maniera facile e veloce con il database postgresql.
+Questo progetto verrà utilizzato per esporre i dati in maniera facile e veloce con il database postgresql e mongo.
 
-### Expose Ports:
-- 80 tcp
+| Expose ports | Protocol |
+| ------ | ------ |
+| 80 | TCP |
 
 ### Information general:
-- `not` require volume mounted on Docker
+> Note: `not` require volume mounted on Docker
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| Mongo | ✅  |
+| Postgresql | ✅  |
+| RabbitMQ | ✅  |
+| Notify | ⛔ |
+
 ### Variabili globali richiesti:
 ```sh
 example:
     #--- DB ---
     DATABASE_CONNECTION: User ID=guest;Password=guest;Host=localhost;Port=33333;Database=db; [require]
+    DATABASE_CONNECTION_MONGO: "mongodb://ip:port"
+    NAME_DATABASE_MONGO: "name db"
     
     #--- Rabbit ---
     USERNAME_RABBIT: "guest" #guest [default]
@@ -90,7 +117,13 @@ example:
 ## 💾Update Service
 Questo progetto verrà utilizzato per controllare se sono presenti nel file locale se non ci sono, invia un messaggio a DownloadService che scarica l'episodio mancante.
 ### Information general:
-- `require` volume mounted on Docker
+> Note: `require` volume mounted on Docker
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| Api | ✅  |
+| RabbitMQ | ✅  |
 ### Variabili globali richiesti:
 ```sh
 example:
@@ -112,13 +145,21 @@ example:
     BASE_PATH: "/folder/anime" or "D:\\\\Directory\Anime" #/ [default]
     TIME_REFRESH: "60000" <-- milliseconds #120000 [default] 2 minutes
     LIMIT_THREAD_PARALLEL: "8" #5 [default]
-    SELECT_SERVICE: "manga or anime" #anime
+    SELECT_SERVICE: "book or video" #video
 ```
 
 ## 💽Upgrade Service
 Questo progetto verrà utilizzato per scaricare i nuovi episodi
 ### Information general:
-- `not` require volume mounted on Docker
+> Note: `not` require volume mounted on Docker
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| Api | ✅  |
+| RabbitMQ | ✅  |
+| Notify | ⛔ |
+
 ### Variabili globali richiesti:
 ```sh
 example:
@@ -140,13 +181,20 @@ example:
     BASE_PATH: "/folder/anime" or "D:\\\\Directory\Anime" #http [default]
     TIME_REFRESH: "60000" <-- milliseconds #1200000 [default] 20 minutes
     LIMIT_THREAD_PARALLEL: "8" #5 [default]
-    SELECT_SERVICE: "manga or anime" #anime
+    SELECT_SERVICE: "book or video" #video
 ```
 
 ## 📩Download Service
 Questo progetto verrà utilizzato per scaricare i video e mettere nella cartella.
 ### Information general:
-- `require` volume mounted on Docker
+> Notes: `require` volume mounted on Docker and se hai abilitato il proxy, nella cartella proxy devi inserire gli indirizzi ip con il comma, come in questo esempio: `http:1111:1234,http:2222:1234`
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| Api | ✅  |
+| RabbitMQ | ✅  |
+
 ### Variabili globali richiesti:
 ```sh
 example:
@@ -165,15 +213,27 @@ example:
     LOG_LEVEL: "Debug|Info|Error" #Info [default]
     WEBHOOK_DISCORD_DEBUG: "url" [not require]
     
+    #--- proxy ---
+    PROXY_ENABLE: "true"
+
     #--- General ---
-    LIMIT_THREAD_PARALLEL: "500" #5 [default]
+    DELAY_RETRY_ERROR: "60000" #10000 [default]
+    MAX_DELAY: "40" #5 [default]
+    LIMIT_THREAD_PARALLEL: "100" #5 [default]
     PATH_TEMP: "/tmp/folder" #D:\\TestAnime\\temp [default]
     BASE_PATH: "/folder/anime" or "D:\\\\Directory\Anime" #/ [default]
 ```
 
 ## 📨Notify Service
 ### Information general:
-- `not` require volume mounted on Docker
+> Note: `not` require volume mounted on Docker
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| Api | ✅  |
+| RabbitMQ | ✅  |
+
 ```sh
 example:
     #--- rabbit ---
@@ -197,7 +257,14 @@ example:
 ## 💱Conversion Service
 Questo progetto verrà utilizzato per convertire file ts in mp4 da poter riprodurre in streaming
 ### Information general:
-- `require` volume mounted on Docker
+> Note: `require` volume mounted on Docker
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| Api | ✅  |
+| RabbitMQ | ✅  |
+
 ### Variabili globali richiesti:
 ```sh
 example:
@@ -217,6 +284,7 @@ example:
     WEBHOOK_DISCORD_DEBUG: "url" [not require]
     
     #--- General ---
+    MAX_THREAD: "3" #3 default
     PATH_TEMP: "/folder/temp" [require]
     PATH_FFMPEG: "/folder/bin" #/usr/local/bin/ffmpeg [default]
     BASE_PATH: "/folder/anime" or "D:\\\\Directory\Anime" #/ [default]
@@ -225,7 +293,7 @@ example:
 ## 🏠Room server (Hapi)
 questo progetto viene gestito le sessioni di streaming e le interazioni dei video degli altri, per esempio se viene messo in pausa tutte le persone che sono presenti in quella stanza viene messo in pausa il video.
 ### Information general:
-- `not` require volume mounted on Docker
+> Note: `not` require volume mounted on Docker
 ### Variabili globali richiesti:
 ```sh
 example:

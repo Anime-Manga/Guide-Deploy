@@ -21,8 +21,21 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./init/database.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init/database-dev.sql:/docker-entrypoint-initdb.d/init.sql
+      - dataPostgres:/var/lib/postgresql/data
     hostname: postgres
+    networks:
+      - default
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    container_name: mongo
+    ports:
+      - 27017:27017
+    hostname: mongo
+    volumes:
+      - dataMongo:/data/db
     networks:
       - default
 
@@ -72,7 +85,13 @@ services:
       PORT_API: 80
       LOG_LEVEL: "Info"
       LIMIT_THREAD_PARALLEL: "50"
+      DATABASE_CONNECTION_MONGO: "mongodb://mongo:27017"
+      NAME_DATABASE_MONGO: "animeManga"
+    volumes:
+      - ./schemaDefault/schemas.json:/app/schemas.json
+      - ./schemaDefault/schema_template.json:/app/schema_template.json
     depends_on:
+      - mongo
       - postgres
       - rabbit
     hostname: api
@@ -82,13 +101,13 @@ services:
     restart: unless-stopped
     container_name: web
     environment:
-      NODE_TLS_REJECT_UNAUTHORIZED: 0
-      API_BASE_URL: "http://api:80"
-      SOCKET_PATH: "ws://<ip server-room>:5001/room"
-      HTTP_PATH: "http://<ip http-server>:5002"
-      BASE_PATH: "/public"
-      SHARE_ROOM: "http://<you-ip>:3000 || DNS"
-    command: bash -c "npm run build && node .output/server/index.mjs"
+      NUXT_API_BASE: "http://api:80"
+      NUXT_PUBLIC_SOCKET_BASE: "ws://<ip server-room>:5001/room"
+      NUXT_PUBLIC_HTTP_BASE: "http://<ip http-server>:5002"
+      NUXT_PUBLIC_BASE_PATH: "/public"
+      NUXT_PUBLIC_WEB_BASE: "http://<your-ip>:3000 || DNS"
+      NUXT_PUBLIC_AUTH_ORIGIN: "http://<your-ip>:3000"
+      NUXT_SECRET: "yoursecret"
     ports:
       - 3000:3000
     depends_on:
@@ -109,8 +128,10 @@ services:
       ADDRESS_API: "api"
       PORT_API: "80"
       LOG_LEVEL: "Info"
-      SELECT_SERVICE: "anime"
+      SELECT_SERVICE: "video"
     volumes:
+      - ./schemaDefault/schemas.json:/app/schemas.json
+      - ./schemaDefault/schema_template.json:/app/schema_template.json
       - data:/public
     depends_on:
       - api
@@ -126,8 +147,10 @@ services:
       ADDRESS_API: "api"
       PORT_API: "80"
       LOG_LEVEL: "Info"
-      SELECT_SERVICE: "manga"
+      SELECT_SERVICE: "book"
     volumes:
+      - ./schemaDefault/schemas.json:/app/schemas.json
+      - ./schemaDefault/schema_template.json:/app/schema_template.json
       - data:/public
     depends_on:
       - api
@@ -143,7 +166,10 @@ services:
         ADDRESS_RABBIT: "rabbit"
         PORT_API: "80"
         LOG_LEVEL: "Info"
-        SELECT_SERVICE: "anime"
+        SELECT_SERVICE: "video"
+      volumes:
+        - ./schemaDefault/schemas.json:/app/schemas.json
+        - ./schemaDefault/schema_template.json:/app/schema_template.json
       depends_on:
         - api
         - rabbit
@@ -158,7 +184,10 @@ services:
         ADDRESS_RABBIT: "rabbit"
         PORT_API: "80"
         LOG_LEVEL: "Info"
-        SELECT_SERVICE: "manga"
+        SELECT_SERVICE: "book"
+      volumes:
+        - ./schemaDefault/schemas.json:/app/schemas.json
+        - ./schemaDefault/schema_template.json:/app/schema_template.json
       depends_on:
         - api
         - rabbit
@@ -176,6 +205,8 @@ services:
       PATH_TEMP: "/temp"
       BASE_PATH: "/public"
     volumes:
+      - ./schemaDefault/schemas.json:/app/schemas.json
+      - ./schemaDefault/schema_template.json:/app/schema_template.json
       - temp:/temp
       - data:/public
     depends_on:
@@ -224,4 +255,26 @@ networks:
 
 volumes:
   data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/animeMnaga/data'
   temp:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/animeMnaga/temp'
+  dataPostgres:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/animeMnaga/dataPostgres'
+  dataMongo:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/animeMnaga/dataMongo'
