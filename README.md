@@ -12,13 +12,14 @@ Il progetto si suddivide in 9 progetti:
 - 💱Conversion Service (C#)
 - 🏠Room server (Hapi)
 - 📁Path server (Nodejs)
-- 🌐Web Server([Nuxtjs](https://nuxtjs.org/))
+- 🌐Web Server([Nuxtjs](https://nuxt.com/) V3)
 
 Servizi utilizzati:
 - 🐰[RabbitMQ](https://www.rabbitmq.com/)
 - 🗄[Postgresql](https://www.postgresql.org/)
+- 📄[MongoDB](https://www.mongodb.com/)
 
-### Lista di immagini disponibili su DockerHub
+### Le immagini sono disponibili su DockerHub
 | Nome Immagine | Link |
 | ------ | ------ |
 | 🧮Api Service | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-apiservice) |
@@ -34,8 +35,16 @@ Servizi utilizzati:
 Questo progetto verrà utilizzato per gli utenti che vorranno scaricare anime e/o manga.
 Hanno la possibilità di vedere l'anime con gli amici in tempo reale.
 
-### Expose Ports:
-- 3000 tcp
+| Expose ports | Protocol |
+| ------ | ------ |
+| 3000 | TCP |
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| Api | ✅  |
+| Ftp | ✅  |
+| Room server | ⛔ |
 
 ### Variabili globali richiesti:
 ```sh
@@ -61,11 +70,21 @@ example:
 ## 🧮Api Service
 Questo progetto verrà utilizzato per esporre i dati in maniera facile e veloce con il database postgresql e mongo.
 
-### Expose Ports:
-- 80 tcp
+| Expose ports | Protocol |
+| ------ | ------ |
+| 80 | TCP |
 
 ### Information general:
-- `not` require volume mounted on Docker
+> Note: `not` require volume mounted on Docker
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| Mongo | ✅  |
+| Postgresql | ✅  |
+| RabbitMQ | ✅  |
+| Notify | ⛔ |
+
 ### Variabili globali richiesti:
 ```sh
 example:
@@ -94,7 +113,13 @@ example:
 ## 💾Update Service
 Questo progetto verrà utilizzato per controllare se sono presenti nel file locale se non ci sono, invia un messaggio a DownloadService che scarica l'episodio mancante.
 ### Information general:
-- `require` volume mounted on Docker
+> Note: `require` volume mounted on Docker
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| Api | ✅  |
+| RabbitMQ | ✅  |
 ### Variabili globali richiesti:
 ```sh
 example:
@@ -122,7 +147,15 @@ example:
 ## 💽Upgrade Service
 Questo progetto verrà utilizzato per scaricare i nuovi episodi
 ### Information general:
-- `not` require volume mounted on Docker
+> Note: `not` require volume mounted on Docker
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| Api | ✅  |
+| RabbitMQ | ✅  |
+| Notify | ⛔ |
+
 ### Variabili globali richiesti:
 ```sh
 example:
@@ -150,8 +183,14 @@ example:
 ## 📩Download Service
 Questo progetto verrà utilizzato per scaricare i video e mettere nella cartella.
 ### Information general:
-- `require` volume mounted on Docker
-- Se hai abilitato il proxy, nella cartella proxy dovete inserire gli indirizzi ip con il comma, come in questo esempio: `http:1111:1234,http:2222:1234`
+> Notes: `require` volume mounted on Docker and se hai abilitato il proxy, nella cartella proxy devi inserire gli indirizzi ip con il comma, come in questo esempio: `http:1111:1234,http:2222:1234`
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| Api | ✅  |
+| RabbitMQ | ✅  |
+
 ### Variabili globali richiesti:
 ```sh
 example:
@@ -183,7 +222,14 @@ example:
 
 ## 📨Notify Service
 ### Information general:
-- `not` require volume mounted on Docker
+> Note: `not` require volume mounted on Docker
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| Api | ✅  |
+| RabbitMQ | ✅  |
+
 ```sh
 example:
     #--- rabbit ---
@@ -207,7 +253,14 @@ example:
 ## 💱Conversion Service
 Questo progetto verrà utilizzato per convertire file ts in mp4 da poter riprodurre in streaming
 ### Information general:
-- `require` volume mounted on Docker
+> Note: `require` volume mounted on Docker
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| Api | ✅  |
+| RabbitMQ | ✅  |
+
 ### Variabili globali richiesti:
 ```sh
 example:
@@ -236,7 +289,7 @@ example:
 ## 🏠Room server (Hapi)
 questo progetto viene gestito le sessioni di streaming e le interazioni dei video degli altri, per esempio se viene messo in pausa tutte le persone che sono presenti in quella stanza viene messo in pausa il video.
 ### Information general:
-- `not` require volume mounted on Docker
+> Note: `not` require volume mounted on Docker
 ### Variabili globali richiesti:
 ```sh
 example:
