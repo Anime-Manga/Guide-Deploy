@@ -21,7 +21,6 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./schemaDefault/schemas.json:/app/schemas.json
       - ./init/database-dev.sql:/docker-entrypoint-initdb.d/init.sql
       - dataPostgres:/var/lib/postgresql/data
     hostname: postgres
@@ -90,6 +89,7 @@ services:
       NAME_DATABASE_MONGO: "animeManga"
     volumes:
       - ./schemaDefault/schemas.json:/app/schemas.json
+      - ./schemaDefault/schema_template.json:/app/schema_template.json
     depends_on:
       - mongo
       - postgres
@@ -131,6 +131,7 @@ services:
       SELECT_SERVICE: "video"
     volumes:
       - ./schemaDefault/schemas.json:/app/schemas.json
+      - ./schemaDefault/schema_template.json:/app/schema_template.json
       - data:/public
     depends_on:
       - api
@@ -149,6 +150,7 @@ services:
       SELECT_SERVICE: "book"
     volumes:
       - ./schemaDefault/schemas.json:/app/schemas.json
+      - ./schemaDefault/schema_template.json:/app/schema_template.json
       - data:/public
     depends_on:
       - api
@@ -167,6 +169,7 @@ services:
         SELECT_SERVICE: "video"
       volumes:
         - ./schemaDefault/schemas.json:/app/schemas.json
+        - ./schemaDefault/schema_template.json:/app/schema_template.json
       depends_on:
         - api
         - rabbit
@@ -184,6 +187,7 @@ services:
         SELECT_SERVICE: "book"
       volumes:
         - ./schemaDefault/schemas.json:/app/schemas.json
+        - ./schemaDefault/schema_template.json:/app/schema_template.json
       depends_on:
         - api
         - rabbit
@@ -202,6 +206,7 @@ services:
       BASE_PATH: "/public"
     volumes:
       - ./schemaDefault/schemas.json:/app/schemas.json
+      - ./schemaDefault/schema_template.json:/app/schema_template.json
       - temp:/temp
       - data:/public
     depends_on:
