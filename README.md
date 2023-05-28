@@ -31,6 +31,10 @@ Servizi utilizzati:
 | 🏠Room server (Hapi) | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-roomserver) |
 | 🌐Web Client | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-web) |
 
+#### Istruzioni per avviare i servizi
+1. Completare alcuni campi vuoti nel file docker-compose.yml
+2. Avviare il bash della installazione `bash installation.sh` oppure `./installation.sh` e Goditi!😊😁🥴
+
 ## 🌐Web Server
 Questo progetto verrà utilizzato per gli utenti che vorranno scaricare anime e/o manga.
 Hanno la possibilità di vedere l'anime con gli amici in tempo reale.
