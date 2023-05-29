@@ -60,9 +60,10 @@ CREATE TABLE account
 
 CREATE TABLE whitelist
 (
-    name varchar(500) primary key not null,
+    name varchar(500) not null,
     username varchar(250) REFERENCES account(username) ON DELETE CASCADE not null,
-    nameCfg text not null
+    nameCfg text not null,
+    PRIMARY KEY (name, username)
 );
 
 CREATE TABLE progressEpisode(
