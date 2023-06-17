@@ -67,8 +67,7 @@ example:
     NUXT_PUBLIC_WEB_BASE: "http://localhost:33333" #http://localhost:3000 [default]
 
     #--- AUTH ---
-    NUXT_PUBLIC_AUTH_ORIGIN: "http://<your-ip>:3000" #http://localhost:3000
-    NUXT_SECRET: "secret" #animemanga [default]
+    NUXT_PUBLIC_SECRET: "secret" #animemanga [default]
 ```
 
 ## 🧮Api Service
