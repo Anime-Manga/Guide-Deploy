@@ -67,8 +67,7 @@ example:
     NUXT_PUBLIC_WEB_BASE: "http://localhost:33333" #http://localhost:3000 [default]
 
     #--- AUTH ---
-    NUXT_PUBLIC_AUTH_ORIGIN: "http://<your-ip>:3000" #http://localhost:3000
-    NUXT_SECRET: "secret" #animemanga [default]
+    NUXT_PUBLIC_SECRET: "secret" #animemanga [default]
 ```
 
 ## 🧮Api Service
@@ -222,6 +221,8 @@ example:
     LIMIT_THREAD_PARALLEL: "100" #5 [default]
     PATH_TEMP: "/tmp/folder" #D:\\TestAnime\\temp [default]
     BASE_PATH: "/folder/anime" or "D:\\\\Directory\Anime" #/ [default]
+    ENABLE_VIDEO: "false" #true [default]
+    ENABLE_BOOK: "true" #true [default]
 ```
 
 ## 📨Notify Service
