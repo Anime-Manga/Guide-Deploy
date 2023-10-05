@@ -35,7 +35,7 @@ Servizi utilizzati:
 
 #### Istruzioni per avviare i servizi
 1. Completare alcuni campi vuoti nel file docker-compose.yml
-2. Avviare il bash della installazione `bash installation.sh` oppure `./installation.sh` e Goditi!😊😁🥴
+2. Ho creato un file bash per gestire il progetto, ti basta solo avviare in `bash management.sh` oppure in `./management.sh` e Goditi!😊😁🥴
 
 ## 🌐Web Server
 Questo progetto verrà utilizzato per gli utenti che vorranno scaricare anime e/o manga.
