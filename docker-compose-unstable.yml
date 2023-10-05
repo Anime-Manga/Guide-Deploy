@@ -38,19 +38,6 @@ services:
     networks:
       - default
 
-  #pgadmin:
-  #  image: dpage/pgadmin4
-  #  restart: unless-stopped
-  #  container_name: pgadmin4
-  #  environment:
-  #    PGADMIN_DEFAULT_EMAIL: root@admin.com
-  #    PGADMIN_DEFAULT_PASSWORD: toortoor!1234
-  #  ports:
-  #    - 5050:80
-  #  hostname: pgadmin4
-  #  networks:
-  #    - default
-
   ftp:
     image: danjellz/http-server
     restart: unless-stopped
@@ -191,6 +178,7 @@ services:
       - env/download.env
       - env/api_public.env
     volumes:
+      - ./proxy/proxy.txt:/app/proxy.txt
       - ./schemaDefault/schemas.json:/app/schemas.json
       - ./schemaDefault/schema_template.json:/app/schema_template.json
       - temp:/temp
@@ -229,6 +217,20 @@ services:
     depends_on:
       - rabbit
       - api
+
+  tor-proxy:
+    image: kju7pwd2/animemanga-torproxy:latest_DEV
+    restart: unless-stopped
+    container_name: tor-proxy
+    hostname: tor-proxy`
+    env_file:
+      - env/rabbit.env
+      - env/proxy.env
+    volumes:
+      - ./proxy:/app/proxy
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - default
 
 networks:
   default:

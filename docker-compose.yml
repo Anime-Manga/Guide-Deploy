@@ -178,6 +178,7 @@ services:
       - env/download.env
       - env/api_public.env
     volumes:
+      - ./proxy/proxy.txt:/app/proxy.txt
       - ./schemaDefault/schemas.json:/app/schemas.json
       - ./schemaDefault/schema_template.json:/app/schema_template.json
       - temp:/temp
@@ -216,6 +217,20 @@ services:
     depends_on:
       - rabbit
       - api
+  
+  tor-proxy:
+    image: kju7pwd2/animemanga-torproxy:latest
+    restart: unless-stopped
+    container_name: tor-proxy
+    hostname: tor-proxy`
+    env_file:
+      - env/rabbit.env
+      - env/proxy.env
+    volumes:
+      - ./proxy:/app/proxy
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - default
 
 networks:
   default:

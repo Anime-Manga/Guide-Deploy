@@ -10,9 +10,10 @@ Il progetto si suddivide in 9 progetti:
 - 💾Update Service (C#)
 - 💽Upgrade Service (C#)
 - 💱Conversion Service (C#)
-- 🏠Room server (Hapi)
-- 📁Path server (Nodejs)
+- 🏠Room Server (Hapi)
+- 📁Path Server (Nodejs)
 - 🌐Web Server([Nuxtjs](https://nuxt.com/) V3)
+- 🎭Tor Proxy (Python)
 
 Servizi utilizzati:
 - 🐰[RabbitMQ](https://www.rabbitmq.com/)
@@ -210,10 +211,9 @@ example:
     
     #--- Logger ---
     LOG_LEVEL: "Debug|Info|Error" #Info [default]
-    WEBHOOK_DISCORD_DEBUG: "url" [not require]
     
     #--- proxy ---
-    PROXY_ENABLE: "true"
+    PROXY_ENABLE: "true" #false [default]
 
     #--- General ---
     DELAY_RETRY_ERROR: "60000" #10000 [default]
@@ -311,3 +311,27 @@ Installare `nodejs` e `npm`, infine installare il pacchetto ftp: `npm install --
 Avviare con `http-server '/root/anime'` come avvio della macchina
 
 Oppure si può usare questa immagine: `danjellz/http-server`, la cartella che viene esposta è la seguente: `/public`
+
+## 🎭Tor Proxy
+Questo progetto verrà utilizzato per fare proxy attraverso tor per evitare che venga tracciato e se dovesse bloccare per le troppe richieste viene riavviato.
+### Information general:
+> Note: `not require` volume mounted on Docker
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| RabbitMQ | ✅  |
+
+### Variabili globali richiesti:
+```sh
+example:
+    #--- rabbit ---
+    USERNAME_RABBIT: "guest" #guest [default]
+    PASSWORD_RABBIT: "guest" #guest [default]
+    ADDRESS_RABBIT: "localhost" #localhost [default]
+    
+    #--- General ---
+    EXPECTED_ADDRESS: "127.0.0.1" #127.0.0.1 [default][require]
+    REPLICAS: 10 #10 [default][require]
+    EXCHANGE_NAME: "example_exchange" #Cesxhin.AnimeManga.Domain.DTO:ProxyDTO [default][require]
+```
