@@ -31,6 +31,7 @@ Servizi utilizzati:
 | 💱Conversion Service | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-conversionservice) |
 | 🏠Room server (Hapi) | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-roomserver) |
 | 🌐Web Client | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-web) |
+| 🎭Tor Proxy | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-torproxy) |
 
 #### Istruzioni per avviare i servizi
 1. Completare alcuni campi vuoti nel file docker-compose.yml
