@@ -15,9 +15,8 @@ services:
     image: postgres
     restart: unless-stopped
     container_name: postgres
-    environment:
-        POSTGRES_USER: root
-        POSTGRES_PASSWORD: toortoor!1234
+    env_file:
+      - env/postgres.env
     ports:
       - 5432:5432
     volumes:
@@ -38,19 +37,6 @@ services:
       - dataMongo:/data/db
     networks:
       - default
-
-  #pgadmin:
-  #  image: dpage/pgadmin4
-  #  restart: unless-stopped
-  #  container_name: pgadmin4
-  #  environment:
-  #    PGADMIN_DEFAULT_EMAIL: root@admin.com
-  #    PGADMIN_DEFAULT_PASSWORD: toortoor!1234
-  #  ports:
-  #    - 5050:80
-  #  hostname: pgadmin4
-  #  networks:
-  #    - default
 
   ftp:
     image: danjellz/http-server
@@ -78,15 +64,10 @@ services:
     image: kju7pwd2/animemanga-apiservice:latest
     restart: unless-stopped
     container_name: apiService
-    environment:
-      DATABASE_CONNECTION: User ID=root;Password=toortoor!1234;Host=postgres;Port=5432;Database=animemanga;
-      ADDRESS_RABBIT: rabbit
-      BASE_PATH: "/public"
-      PORT_API: 80
-      LOG_LEVEL: "Info"
-      LIMIT_THREAD_PARALLEL: "50"
-      DATABASE_CONNECTION_MONGO: "mongodb://mongo:27017"
-      NAME_DATABASE_MONGO: "animeManga"
+    env_file:
+      - env/rabbit.env
+      - env/api.env
+      - env/storage.env
     volumes:
       - ./schemaDefault/schemas.json:/app/schemas.json
       - ./schemaDefault/schema_template.json:/app/schema_template.json
@@ -100,14 +81,8 @@ services:
     image: kju7pwd2/animemanga-web:latest
     restart: unless-stopped
     container_name: web
-    environment:
-      NUXT_API_BASE: "http://api:80"
-      NUXT_PUBLIC_SOCKET_BASE: "ws://<ip server-room>:5001/room"
-      NUXT_PUBLIC_HTTP_BASE: "http://<ip http-server>:5002"
-      NUXT_PUBLIC_BASE_PATH: "/public"
-      NUXT_PUBLIC_WEB_BASE: "http://<your-ip>:3000 || DNS"
-      NUXT_PUBLIC_AUTH_ORIGIN: "http://<your-ip>:3000"
-      NUXT_SECRET: "yoursecret"
+    env_file:
+      - env/web.env
     ports:
       - 3000:3000
     depends_on:
@@ -122,12 +97,12 @@ services:
     image: kju7pwd2/animemanga-updateservice:latest
     restart: unless-stopped
     container_name: updateService-anime
+    env_file:
+      - env/rabbit.env
+      - env/storage.env
+      - env/update.env
+      - env/api_public.env
     environment:
-      ADDRESS_RABBIT: "rabbit"
-      BASE_PATH: "/public"
-      ADDRESS_API: "api"
-      PORT_API: "80"
-      LOG_LEVEL: "Info"
       SELECT_SERVICE: "video"
     volumes:
       - ./schemaDefault/schemas.json:/app/schemas.json
@@ -141,12 +116,12 @@ services:
     image: kju7pwd2/animemanga-updateservice:latest
     restart: unless-stopped
     container_name: updateService-manga
+    env_file:
+      - env/rabbit.env
+      - env/storage.env
+      - env/update.env
+      - env/api_public.env
     environment:
-      ADDRESS_RABBIT: "rabbit"
-      BASE_PATH: "/public"
-      ADDRESS_API: "api"
-      PORT_API: "80"
-      LOG_LEVEL: "Info"
       SELECT_SERVICE: "book"
     volumes:
       - ./schemaDefault/schemas.json:/app/schemas.json
@@ -160,12 +135,12 @@ services:
       image: kju7pwd2/animemanga-upgradeservice:latest
       restart: unless-stopped
       container_name: upgradeService-anime
+      env_file:
+        - env/rabbit.env
+        - env/storage.env
+        - env/upgrade.env
+        - env/api_public.env
       environment:
-        BASE_PATH: "/public"
-        ADDRESS_API: "api"
-        ADDRESS_RABBIT: "rabbit"
-        PORT_API: "80"
-        LOG_LEVEL: "Info"
         SELECT_SERVICE: "video"
       volumes:
         - ./schemaDefault/schemas.json:/app/schemas.json
@@ -178,12 +153,12 @@ services:
       image: kju7pwd2/animemanga-upgradeservice:latest
       restart: unless-stopped
       container_name: upgradeService-manga
+      env_file:
+        - env/rabbit.env
+        - env/storage.env
+        - env/upgrade.env
+        - env/api_public.env
       environment:
-        BASE_PATH: "/public"
-        ADDRESS_API: "api"
-        ADDRESS_RABBIT: "rabbit"
-        PORT_API: "80"
-        LOG_LEVEL: "Info"
         SELECT_SERVICE: "book"
       volumes:
         - ./schemaDefault/schemas.json:/app/schemas.json
@@ -196,14 +171,12 @@ services:
     image: kju7pwd2/animemanga-downloadservice:latest
     restart: unless-stopped
     container_name: downloadService
-    environment:
-      ADDRESS_RABBIT: "rabbit"
-      ADDRESS_API: "api"
-      PORT_API: "80"
-      LOG_LEVEL: "Info"
-      LIMIT_THREAD_PARALLEL: "500"
-      PATH_TEMP: "/temp"
-      BASE_PATH: "/public"
+    env_file:
+      - env/rabbit.env
+      - env/storage.env
+      - env/storage_temp.env
+      - env/download.env
+      - env/api_public.env
     volumes:
       - ./schemaDefault/schemas.json:/app/schemas.json
       - ./schemaDefault/schema_template.json:/app/schema_template.json
@@ -218,12 +191,10 @@ services:
     image: kju7pwd2/animemanga-notifyservice:latest
     restart: unless-stopped
     container_name: notifyService
-    environment:
-      ADDRESS_RABBIT: "rabbit"
-      ADDRESS_API: "api"
-      PORT_API: "80"
-      LOG_LEVEL: "Info"
-      WEBHOOK_DISCORD: "<url>"
+    env_file:
+      - env/rabbit.env
+      - env/api_public.env
+      - env/notify.env
     depends_on:
       - rabbit
       - api
@@ -233,15 +204,12 @@ services:
     restart: unless-stopped
     container_name: conversionService
     command: bash -c "apt update && apt install -y ffmpeg"
-    environment:
-      ADDRESS_RABBIT: "rabbit"
-      ADDRESS_API: "api"
-      PORT_API: "80"
-      LOG_LEVEL: "Info"
-      LIMIT_CONSUMER_RABBIT: "1"
-      PATH_FFMPEG: "/usr/bin"
-      PATH_TEMP: "/temp"
-      BASE_PATH: "/public"
+    env_file:
+      - env/rabbit.env
+      - env/api_public.env
+      - env/storage.env
+      - env/storage_temp.env
+      - env/conversion.env
     volumes:
       - temp:/temp
       - data:/public
