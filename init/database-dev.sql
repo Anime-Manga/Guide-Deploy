@@ -29,6 +29,19 @@ CREATE TABLE episodeRegister
     episodeHash varchar(64)
 );
 
+CREATE TABLE episodeQueue(
+    url text primary key,
+    nameCfg text not null,
+    timeRequest bigint not null
+);
+
+CREATE TABLE episodeBlacklist(
+    videoId varchar(250) not null,
+    url text not null,
+    nameCfg text not null,
+    PRIMARY KEY(videoId, url)
+);
+
 /*book*/
 CREATE TABLE chapter
 (
@@ -50,12 +63,25 @@ CREATE TABLE chapterRegister
     chapterHash varchar[]
 );
 
-/* account */
+CREATE TABLE chapterQueue(
+    url text primary key,
+    nameCfg text not null,
+    timeRequest bigint not null
+);
 
+CREATE TABLE chapterBlacklist(
+    nameManga varchar(250) not null,
+    url text not null,
+    nameCfg text not null,
+    PRIMARY KEY(nameManga, url)
+);
+
+/* account */
 CREATE TABLE account
 (
     username varchar(250) primary key not null,
-    password varchar(500) not null
+    password varchar(500) not null,
+    role integer default 0
 );
 
 CREATE TABLE whitelist
