@@ -30,9 +30,11 @@ CREATE TABLE episodeRegister
 );
 
 CREATE TABLE episodeQueue(
-    url text primary key,
+    videoId varchar(250) not null,
+    url text,
     nameCfg text not null,
-    timeRequest bigint not null
+    timeRequest bigint not null,
+    PRIMARY KEY(videoId, nameCfg, url)
 );
 
 CREATE TABLE episodeBlacklist(
@@ -64,9 +66,11 @@ CREATE TABLE chapterRegister
 );
 
 CREATE TABLE chapterQueue(
-    url text primary key,
+    nameManga varchar(250) not null,
+    url text,
     nameCfg text not null,
-    timeRequest bigint not null
+    timeRequest bigint not null,
+    PRIMARY KEY(nameManga, nameCfg, url)
 );
 
 CREATE TABLE chapterBlacklist(
