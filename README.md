@@ -10,9 +10,10 @@ Il progetto si suddivide in 9 progetti:
 - 💾Update Service (C#)
 - 💽Upgrade Service (C#)
 - 💱Conversion Service (C#)
-- 🏠Room server (Hapi)
-- 📁Path server (Nodejs)
+- 🏠Room Server (Hapi)
+- 📁Path Server (Nodejs)
 - 🌐Web Server([Nuxtjs](https://nuxt.com/) V3)
+- 🎭Tor Proxy (Python)
 
 Servizi utilizzati:
 - 🐰[RabbitMQ](https://www.rabbitmq.com/)
@@ -30,10 +31,12 @@ Servizi utilizzati:
 | 💱Conversion Service | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-conversionservice) |
 | 🏠Room server (Hapi) | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-roomserver) |
 | 🌐Web Client | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-web) |
+| 🎭Tor Proxy | [Link](https://hub.docker.com/r/kju7pwd2/animemanga-torproxy) |
 
 #### Istruzioni per avviare i servizi
 1. Completare alcuni campi vuoti nel file docker-compose.yml
-2. Avviare il bash della installazione `bash installation.sh` oppure `./installation.sh` e Goditi!😊😁🥴
+2. Ho creato un file bash per gestire il progetto, ti basta solo avviare in `bash management.sh` oppure in `./management.sh` e Goditi!😊😁🥴
+3. Se vuoi sapere di più dallo script, ti basterà fare solo `./management.sh -h` oppure `./management.sh --help`
 
 ## 🌐Web Server
 Questo progetto verrà utilizzato per gli utenti che vorranno scaricare anime e/o manga.
@@ -210,10 +213,9 @@ example:
     
     #--- Logger ---
     LOG_LEVEL: "Debug|Info|Error" #Info [default]
-    WEBHOOK_DISCORD_DEBUG: "url" [not require]
     
     #--- proxy ---
-    PROXY_ENABLE: "true"
+    PROXY_ENABLE: "true" #false [default]
 
     #--- General ---
     DELAY_RETRY_ERROR: "60000" #10000 [default]
@@ -241,18 +243,24 @@ example:
     USERNAME_RABBIT: "guest" #guest [default]
     PASSWORD_RABBIT: "guest" #guest [default]
     ADDRESS_RABBIT: "localhost" #localhost [default]
+    
+    #--- Webhook ---
+    WEBHOOK_DISCORD_BOOK: "url" [require]
+    WEBHOOK_DISCORD_BOOK_REQUEST: "url" [require]
+    WEBHOOK_DISCORD_VIDEO: "url" [require]
+    WEBHOOK_DISCORD_VIDEO_REQUEST: "url" [require]
 
-    #--- API ---
-    ADDRESS_API: "localhost" #localhost [default]
-    PORT_API: "33333" #5000 [default]
-    PROTOCOL_API: "http" or "https" #http [default]
+    #--- Bot Telegram ---
+    TOKEN_BOT: "token" [require]
+    CHAT_ID: "@channelusername" [require]
+    CHAT_ID_REQUEST: "@channelusername" [require]
     
-    #---Webhook---
-    WEBHOOK_DISCORD: "url" [require]
-    
-    #---logger---
+    #--- logger ---
     LOG_LEVEL: "Debug|Info|Error" #Info [default]
     WEBHOOK_DISCORD_DEBUG: "url" [not require]
+
+    #--- General ---
+    SELECT_SERVICE: "Discord|Telegram|Any"
 ```
 
 ## 💱Conversion Service
@@ -311,3 +319,29 @@ Installare `nodejs` e `npm`, infine installare il pacchetto ftp: `npm install --
 Avviare con `http-server '/root/anime'` come avvio della macchina
 
 Oppure si può usare questa immagine: `danjellz/http-server`, la cartella che viene esposta è la seguente: `/public`
+
+## 🎭Tor Proxy
+Questo progetto verrà utilizzato per fare proxy attraverso tor per evitare che venga tracciato e se dovesse bloccare per le troppe richieste viene riavviato con un ip sempre diverso dal precedente.
+### Information general:
+> Note: `not require` volume mounted on Docker
+
+### Dependencies
+| Services | Required |
+| ------ | ------ |
+| RabbitMQ | ✅  |
+
+### Variabili globali richiesti:
+```sh
+example:
+    #--- General ---
+    ADDRESS_RABBIT: "localhost" #"localhost" [default]
+    PORT_RABBIT: 9999 #5672 [default]
+    USERNAME_RABBIT: "guest" #"guest" [default]
+    PASSWORD_RABBIT: "guest" #"guest" [default]
+    EXCHANGE_NAME: "example_exchange" [required]
+    QUEUE_RABBIT: "example_queue" #"animemanga-tor-proxy" [default]
+    REPLICAS: 4 #15 [default]
+    EXPECTED_ADDRESS: #ADDRESS_RABBIT [default]
+    START_PORT: 9999 #8000 [default]
+    PROXY_PATH: "/path/example" #"proxy.txt" [default]
+```
