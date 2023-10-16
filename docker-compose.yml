@@ -229,7 +229,7 @@ services:
       - env/rabbit.env
       - env/proxy.env
     volumes:
-      - ./proxy:/app/proxy
+      - ./proxy/proxy.txt:/app/proxy.txt
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - default
