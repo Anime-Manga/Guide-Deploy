@@ -244,22 +244,22 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/animeMnaga/data'
+      device: '/animeManaga/data'
   temp:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/animeMnaga/temp'
+      device: '/animeManaga/temp'
   dataPostgres:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/animeMnaga/dataPostgres'
+      device: '/animeManaga/dataPostgres'
   dataMongo:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/animeMnaga/dataMongo'
+      device: '/animeManaga/dataMongo'
