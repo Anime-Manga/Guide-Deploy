@@ -321,7 +321,7 @@ Avviare con `http-server '/root/anime'` come avvio della macchina
 Oppure si può usare questa immagine: `danjellz/http-server`, la cartella che viene esposta è la seguente: `/public`
 
 ## 🎭Tor Proxy
-Questo progetto verrà utilizzato per fare proxy attraverso tor per evitare che venga tracciato e se dovesse bloccare per le troppe richieste viene riavviato.
+Questo progetto verrà utilizzato per fare proxy attraverso tor per evitare che venga tracciato e se dovesse bloccare per le troppe richieste viene riavviato con un ip sempre diverso dal precedente.
 ### Information general:
 > Note: `not require` volume mounted on Docker
 
@@ -333,13 +333,15 @@ Questo progetto verrà utilizzato per fare proxy attraverso tor per evitare che 
 ### Variabili globali richiesti:
 ```sh
 example:
-    #--- rabbit ---
-    USERNAME_RABBIT: "guest" #guest [default]
-    PASSWORD_RABBIT: "guest" #guest [default]
-    ADDRESS_RABBIT: "localhost" #localhost [default]
-    
     #--- General ---
-    EXPECTED_ADDRESS: "127.0.0.1" #127.0.0.1 [default][require]
-    REPLICAS: 10 #10 [default][require]
-    EXCHANGE_NAME: "example_exchange" #Cesxhin.AnimeManga.Domain.DTO:ProxyDTO [default][require]
+    ADDRESS_RABBIT: "localhost" #"localhost" [default]
+    PORT_RABBIT: 9999 #5672 [default]
+    USERNAME_RABBIT: "guest" #"guest" [default]
+    PASSWORD_RABBIT: "guest" #"guest" [default]
+    EXCHANGE_NAME: "example_exchange" [required]
+    QUEUE_RABBIT: "example_queue" #"animemanga-tor-proxy" [default]
+    REPLICAS: 4 #15 [default]
+    EXPECTED_ADDRESS: #ADDRESS_RABBIT [default]
+    START_PORT: 9999 #8000 [default]
+    PROXY_PATH: "/path/example" #"proxy.txt" [default]
 ```

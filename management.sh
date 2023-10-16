@@ -49,7 +49,7 @@ do
 
     if [ "$arg" == "down" ]
     then
-        sudo docker compose -f $FILE_COMPOSE down
+        sudo docker compose -f $FILE_COMPOSE down --timeout 120
         exit 1
     fi
 
